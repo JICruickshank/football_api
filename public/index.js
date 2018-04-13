@@ -11,17 +11,23 @@ const app = function(){
   request.send();
 }
 
-const createTable = function(id) {
+const createTable = function(id, headers) {
   const table = document.createElement("table");
   table.id = id;
+  const headerRow = document.createElement("tr");
+  table.appendChild(headerRow);
+  for(let header of headers) {
+    const tableHeader = document.createElement("th");
+    tableHeader.innerText = header;
+    headerRow.appendChild(tableHeader);
+  }
   return table;
 
 }
 
-
 const displayTable = function() {
   const container = document.querySelector("#leagueTableDiv");
-  const leagueTable = createTable("leagueTable");
+  const leagueTable = createTable("leagueTable", headers);
   debugger;
   container.appendChild(leagueTable);
 
