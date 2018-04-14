@@ -17,6 +17,8 @@ const app = function(){
   requestFixtures.setRequestHeader("X-Auth-Token", key);
   requestFixtures.addEventListener("load", function() {
     const fixtures = JSON.parse(requestFixtures.responseText).fixtures;
+    fixturesButton(fixtures, today());
+
   });
   requestFixtures.send();
 }
@@ -76,8 +78,24 @@ const datesMatch = function(date1, date2) {
   return (date1.getDate() === date2.getDate()) && (date1.getMonth() === date2.getMonth()) && (date1.getYear() === date2.getYear());
 }
 
-// const fixturesButton = document.querySelector("#fixturesButton");
-// fixturesButton.addEventListener("click", function() {})
+const fixturesButton = function(fixtures, date) {
+const button = document.querySelector("#fixturesButton");
+button.addEventListener("click", function() {
+  displayFixtureList(fixtures, date);
+})};
+
+const displayFixtureList = function(fixtures, date) {
+  const games = fixturesByDay(fixtures, date);
+  const ul = document.createElement("ul");
+  ul.innerText = date;
+  for(let fixture of games) {
+    const li = createLi(createFixtureString(fixture));
+    ul.appendChild(li);
+  }
+  const container = document.querySelector("#fixtures");
+  container.appendChild(ul);
+return ul;
+}
 
 const fixturesByDay = function(fixtures, date) {
   games = [];
@@ -90,10 +108,10 @@ const fixturesByDay = function(fixtures, date) {
   return games;
 }
 
-const createLi = function(id, text) {
-  const ul = document.elementById(id);
+const createLi = function(text) {
   const li = document.createElement("li");
   li.innerText = text;
+  return li;
 }
 
 const createFixtureString = function(fixture) {
@@ -110,5 +128,9 @@ const createFixtureString = function(fixture) {
   }
   return fixtureString;
 }
+
+// const createDateString = function(date) {
+//   return `${date.getDay()} ${date.getMonth()} ${date.getYear()}`
+// }
 
 window.addEventListener('load', app);
