@@ -1,8 +1,11 @@
+const key = config.key;
+
 const app = function(){
   const url = "http://api.football-data.org/v1/competitions/445/leagueTable";
   const request = new XMLHttpRequest();
   request.open("GET", url);
-  request.setRequestHeader("X-Auth-Token", "ce59c6fd7c2d47c29fb4c133e01112d8");
+  request.setRequestHeader("X-Auth-Token", key);
+  debugger;
   request.addEventListener("load", function() {
     const parsedTable = JSON.parse(request.responseText).standing;
     debugger;
