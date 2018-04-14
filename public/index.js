@@ -17,17 +17,8 @@ const app = function(){
   requestFixtures.setRequestHeader("X-Auth-Token", key);
   requestFixtures.addEventListener("load", function() {
     const fixtures = JSON.parse(requestFixtures.responseText).fixtures;
-    // const testDate = new Date(fixtures[0].date);
-    // console.log(datesMatch(testDate, date()));
-    console.log(todaysFixtures(fixtures));
-    debugger;
   });
   requestFixtures.send();
-
-
-
-
-
 }
 
 const createTable = function(id, headers) {
@@ -76,24 +67,48 @@ const displayTable = function(table) {
   return leagueTable;
 }
 
-const date = function() {
-  const today = new Date();
-  return today;
+const today = function() {
+  const date = new Date();
+  return date;
 }
 
 const datesMatch = function(date1, date2) {
   return (date1.getDate() === date2.getDate()) && (date1.getMonth() === date2.getMonth()) && (date1.getYear() === date2.getYear());
 }
 
-const todaysFixtures = function(fixtures) {
-  gamesToday = [];
+// const fixturesButton = document.querySelector("#fixturesButton");
+// fixturesButton.addEventListener("click", function() {})
+
+const fixturesByDay = function(fixtures, date) {
+  games = [];
   for(let fixture of fixtures) {
     fixtureDate = new Date(fixture.date);
-    if(datesMatch(date(), fixtureDate)) {
-      gamesToday.push(fixture);
+    if(datesMatch(date, fixtureDate)) {
+      games.push(fixture);
     }
   }
-  return gamesToday;
+  return games;
+}
+
+const createLi = function(id, text) {
+  const ul = document.elementById(id);
+  const li = document.createElement("li");
+  li.innerText = text;
+}
+
+const createFixtureString = function(fixture) {
+  const homeTeam = fixture.homeTeamName;
+  const awayTeam = fixture.awayTeamName;
+  const homeGoals = fixture.result.goalsHomeTeam;
+  const awayGoals = fixture.result.goalsAwayTeam;
+  let fixtureString = ""
+  if(homeGoals === null) {
+    fixtureString = `${homeTeam} v ${awayTeam}`
+  }
+  else {
+    fixtureString = `${homeTeam} ${homeGoals} ${awayTeam} ${awayGoals}`
+  }
+  return fixtureString;
 }
 
 window.addEventListener('load', app);
