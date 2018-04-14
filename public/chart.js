@@ -6,7 +6,8 @@ const drawChart = function(dataToChart) {
   const options = {
     "title": "Goals Per Match",
     "width": 500,
-    "height": 500
+    "height": 500,
+    "backgroundColor": "#F5F5DC"
   }
   const chart = new google.visualization.PieChart(document.getElementById("chart"));
   chart.draw(data, options);

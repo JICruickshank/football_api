@@ -21,6 +21,10 @@ const app = function(){
     const fixtures = JSON.parse(requestFixtures.responseText).fixtures;
     // fixturesButton(fixtures, today());
     getMatchData(fixtures);
+    const fixturesOnUsersDate = function(callback) {
+
+    }
+    displayFixturesByUsersDate(fixtures);
     displayFixtureList(fixtures, today());
     google.charts.load("current", {"packages" :["corechart"]})
     const loadChart = function() {
@@ -75,7 +79,7 @@ const displayTable = function(table) {
         tableRow.style.backgroundColor = "hotpink";
       })
     tableRow.addEventListener("mouseout", function() {
-        tableRow.style.backgroundColor = "white";
+        tableRow.style.backgroundColor = "beige";
       })
     const teamStats = [team.position, team.teamName, team.playedGames, team.wins, team.draws, team.losses, team.goals, team.goalsAgainst, team.points, team.goalDifference];
     for(let stat of teamStats) {
@@ -100,7 +104,19 @@ const datesMatch = function(date1, date2) {
 }
 
 
+const displayFixturesByUsersDate = function(fixtures) {
+  const button = document.querySelector("#submitDate");
+  const input = document.querySelector("#userDate");
+  button.addEventListener("click", function() {
+    const date = new Date(input.value);
+    debugger;
+    displayFixtureList(fixtures, date);
+  })
+}
+
+
 const fixturesByDay = function(fixtures, date) {
+  debugger;
   games = [];
   for(let fixture of fixtures) {
     fixtureDate = new Date(fixture.date);
@@ -129,6 +145,7 @@ const createFixtureString = function(fixture) {
 
 
 const displayFixtureList = function(fixtures, date) {
+  debugger;
   const games = fixturesByDay(fixtures, date);
   const ul = document.createElement("ul");
   ul.innerText = date;

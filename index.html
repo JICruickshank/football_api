@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>PREMIER LEAGUE 2017-18</title>
+    <link rel='stylesheet' type='text/css' href='main.css'>
     <script src="config.js"></script>
     <script src='index.js'></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
@@ -11,6 +12,10 @@
     <div id="leagueTableDiv"></div>
     <p>TODAY'S FIXTURES</p>
     <div id="fixtures"></div>
+    <div id="fixturesByDate">
+      <input type="date" id="userDate">
+      <button id="submitDate">GET FIXTURES FOR THIS DATE</button>
+    </div>
     <div id="chart">
     </div>
   </body>
