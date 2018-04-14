@@ -5,6 +5,7 @@ const app = function(){
   const request = new XMLHttpRequest();
   request.open("GET", url);
   request.setRequestHeader("X-Auth-Token", key);
+
   request.addEventListener("load", function() {
     const parsedTable = JSON.parse(request.responseText).standing;
     displayTable(parsedTable);
@@ -15,13 +16,21 @@ const app = function(){
   const requestFixtures = new XMLHttpRequest();
   requestFixtures.open("GET", urlFixtures);
   requestFixtures.setRequestHeader("X-Auth-Token", key);
+
   requestFixtures.addEventListener("load", function() {
     const fixtures = JSON.parse(requestFixtures.responseText).fixtures;
-    fixturesButton(fixtures, today());
-
+    // fixturesButton(fixtures, today());
+    getMatchData(fixtures);
+    displayFixtureList(fixtures, today());
+    google.charts.load("current", {"packages" :["corechart"]})
+    const loadChart = function() {
+      drawChart(getMatchData(fixtures));
+    };
+    google.charts.setOnLoadCallback(loadChart);
   });
   requestFixtures.send();
 }
+
 
 const createTable = function(id, headers) {
   const table = document.createElement("table");
@@ -36,11 +45,21 @@ const createTable = function(id, headers) {
   return table;
 }
 
+
 const createImage = function(url) {
   const image = document.createElement("img");
   image.src = url;
   return image;
 }
+
+
+const createLi = function(text) {
+  const li = document.createElement("li");
+  li.innerText = text;
+  return li;
+}
+
+
 
 const displayTable = function(table) {
   const container = document.querySelector("#leagueTableDiv");
@@ -69,33 +88,17 @@ const displayTable = function(table) {
   return leagueTable;
 }
 
+
 const today = function() {
   const date = new Date();
   return date;
 }
 
+
 const datesMatch = function(date1, date2) {
   return (date1.getDate() === date2.getDate()) && (date1.getMonth() === date2.getMonth()) && (date1.getYear() === date2.getYear());
 }
 
-const fixturesButton = function(fixtures, date) {
-const button = document.querySelector("#fixturesButton");
-button.addEventListener("click", function() {
-  displayFixtureList(fixtures, date);
-})};
-
-const displayFixtureList = function(fixtures, date) {
-  const games = fixturesByDay(fixtures, date);
-  const ul = document.createElement("ul");
-  ul.innerText = date;
-  for(let fixture of games) {
-    const li = createLi(createFixtureString(fixture));
-    ul.appendChild(li);
-  }
-  const container = document.querySelector("#fixtures");
-  container.appendChild(ul);
-return ul;
-}
 
 const fixturesByDay = function(fixtures, date) {
   games = [];
@@ -108,11 +111,6 @@ const fixturesByDay = function(fixtures, date) {
   return games;
 }
 
-const createLi = function(text) {
-  const li = document.createElement("li");
-  li.innerText = text;
-  return li;
-}
 
 const createFixtureString = function(fixture) {
   const homeTeam = fixture.homeTeamName;
@@ -129,8 +127,89 @@ const createFixtureString = function(fixture) {
   return fixtureString;
 }
 
-// const createDateString = function(date) {
-//   return `${date.getDay()} ${date.getMonth()} ${date.getYear()}`
-// }
+
+const displayFixtureList = function(fixtures, date) {
+  const games = fixturesByDay(fixtures, date);
+  const ul = document.createElement("ul");
+  ul.innerText = date;
+  for(let fixture of games) {
+    const li = createLi(createFixtureString(fixture));
+    ul.appendChild(li);
+  }
+  const container = document.querySelector("#fixtures");
+  container.appendChild(ul);
+return ul;
+}
+
+
+const fixturesButton = function(fixtures, date) {
+const button = document.querySelector("#fixturesButton");
+button.addEventListener("click", function() {
+  displayFixtureList(fixtures, date);
+})};
+
+
+const goalsPerMatch = function(fixture) {
+  const totalGoals = fixture.result.goalsHomeTeam + fixture.result.goalsAwayTeam;
+  return totalGoals;
+}
+
+
+const getMatchData = function(fixtures) {
+  const matchData = {
+    "0 goals": 0,
+    "1 goal": 0,
+    "2 goals": 0,
+    "3 goals": 0,
+    "4 goals": 0,
+    "5 goals": 0,
+    "6 goals": 0,
+    "over 6 goals": 0
+  }
+  const finishedGames = [];
+  for(let fixture of fixtures) {
+    if(fixture.result.goalsHomeTeam !== null) {
+      finishedGames.push(fixture);
+    }
+  }
+  for(let game of finishedGames) {
+    if(goalsPerMatch(game) === 0) {
+      matchData["0 goals"] += 1;
+    }
+    else if(goalsPerMatch(game) === 1) {
+      matchData["1 goal"] += 1;
+    }
+    else if(goalsPerMatch(game) === 2) {
+      matchData["2 goals"] += 1;
+    }
+    else if(goalsPerMatch(game) === 3) {
+      matchData["3 goals"] += 1;
+    }
+    else if(goalsPerMatch(game) === 4) {
+      matchData["4 goals"] += 1;
+    }
+    else if(goalsPerMatch(game) === 5) {
+      matchData["5 goals"] += 1;
+    }
+    else if(goalsPerMatch(game) === 6) {
+      matchData["6 goals"] += 1;
+    }
+    else if(goalsPerMatch(game) > 6) {
+      matchData["over 6 goals"] += 1;
+    }
+
+  }
+
+
+  const prepForChart = [];
+  for(let dataKey in matchData) {
+    const array = [];
+    array.push(dataKey);
+    array.push(matchData[dataKey]);
+    prepForChart.push(array);
+  }
+  return prepForChart;
+}
+
 
 window.addEventListener('load', app);
