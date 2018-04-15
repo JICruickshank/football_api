@@ -5,7 +5,6 @@ const app = function(){
   const request = new XMLHttpRequest();
   request.open("GET", url);
   request.setRequestHeader("X-Auth-Token", key);
-
   request.addEventListener("load", function() {
     const parsedTable = JSON.parse(request.responseText).standing;
     displayTable(parsedTable);
@@ -16,10 +15,8 @@ const app = function(){
   const requestFixtures = new XMLHttpRequest();
   requestFixtures.open("GET", urlFixtures);
   requestFixtures.setRequestHeader("X-Auth-Token", key);
-
   requestFixtures.addEventListener("load", function() {
     const fixtures = JSON.parse(requestFixtures.responseText).fixtures;
-    // fixturesButton(fixtures, today());
     getMatchData(fixtures);
     const fixturesOnUsersDate = function(callback) {
 
@@ -31,6 +28,8 @@ const app = function(){
       drawChart(getMatchData(fixtures));
     };
     google.charts.setOnLoadCallback(loadChart);
+    const cityHome = _.filter(fixtures, ["homeTeamName", "Manchester City FC"])
+    console.log(cityHome);
   });
   requestFixtures.send();
 }
@@ -109,14 +108,12 @@ const displayFixturesByUsersDate = function(fixtures) {
   const input = document.querySelector("#userDate");
   button.addEventListener("click", function() {
     const date = new Date(input.value);
-    debugger;
     displayFixtureList(fixtures, date);
   })
 }
 
 
 const fixturesByDay = function(fixtures, date) {
-  debugger;
   games = [];
   for(let fixture of fixtures) {
     fixtureDate = new Date(fixture.date);
@@ -145,7 +142,6 @@ const createFixtureString = function(fixture) {
 
 
 const displayFixtureList = function(fixtures, date) {
-  debugger;
   const games = fixturesByDay(fixtures, date);
   const ul = document.createElement("ul");
   ul.innerText = date;
