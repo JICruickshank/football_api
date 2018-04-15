@@ -1,7 +1,23 @@
 body {
   background-color: beige;
+  font-family: Arial;
+
 }
 
 #chart {
   background-color: beige;
+}
+table {
+  color: green;
+  font-size: 20px;
+}
+
+td {
+  padding: 10px;
+  margin; 0;
+}
+
+li {
+  list-style-type: none;
+  font-size: 20px;
 }

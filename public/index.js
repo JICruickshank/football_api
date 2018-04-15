@@ -28,8 +28,8 @@ const app = function(){
       drawChart(getMatchData(fixtures));
     };
     google.charts.setOnLoadCallback(loadChart);
-    const cityHome = _.filter(fixtures, ["homeTeamName", "Manchester City FC"])
-    console.log(cityHome);
+    // const cityHome = _.filter(fixtures, ["homeTeamName", "Manchester City FC"])
+    // console.log(cityHome);
   });
   requestFixtures.send();
 }
