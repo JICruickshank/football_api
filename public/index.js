@@ -144,6 +144,7 @@ const createFixtureString = function(fixture) {
 const displayFixtureList = function(fixtures, date) {
   const games = fixturesByDay(fixtures, date);
   const ul = document.createElement("ul");
+  ul.id = "fixtureList";
   ul.innerText = date;
   for(let fixture of games) {
     const li = createLi(createFixtureString(fixture));
